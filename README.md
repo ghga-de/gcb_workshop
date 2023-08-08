@@ -1,4 +1,3 @@
-# gcb_workshop
 
 ## Standardizing and harmonizing NGS analysis workflows
 
