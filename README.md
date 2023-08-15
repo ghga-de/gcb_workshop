@@ -4,6 +4,41 @@
 This tutorial will explore how FAIR principles enable the standardization and harmonization of nf-core-based NGS analysis workflows within GHGA. We will  demonstrate the adaptability of nf-core workflows and discuss the importance of standardization of workflows. Finally, we will show how to make workflows scalable, robust, and automated for continuous benchmarks with hands-on exercises using a subset of a public dataset with various configurations like local and cloud settings.
 
 
+A
+9:00am - 9:30am
+30 min
+Introduction to the tutorial: What is GHGA? What are our workflow objectives? What is FAIR data
+B
+9:30am - 10:00am
+30 min
+Adaptability of nf-core based workflows
+C
+10:00am - 10:30am
+30 min
+Standardization of workflows and efficient use of computational infrastructure
+D
+10:30am - 10:45am
+15 min
+Q&A
+
+
+10:45am - 11:00am
+15 min
+Break
+E
+11:00am - 11:30am
+30 min
+How to make NGS workflows scalable, robust and automatic for continuous benchmarks
+F
+11:30am - 12:30am
+1h
+Hands-on experience (with minimal test cases provided)
+G
+12:30am - 1:00pm
+30min
+Q&A
+
+
 ### Learning Objectives for Tutorial
 
 - FAIR principles and their relevance for workflow standardization and harmonization
