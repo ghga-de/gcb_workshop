@@ -1,17 +1,15 @@
 
 ## **Standardizing and harmonizing NGS analysis workflows**
 
-This workshop is a part of GCB 2023. It is planned to be 3 hours of an overview of standardization and harmonizing NGS analysis strategies in GHGA. We will explore how FAIR principles enable the standardization and harmonization of nf-core-based NGS analysis workflows within GHGA. We will  demonstrate the adaptability of nf-core workflows and discuss the importance of standardization of workflows. Finally, we will show how to make workflows scalable, robust, and automated for continuous benchmarks with hands-on exercises using a subset of a public dataset with various configurations like local and cloud settings.
+This workshop is a part of GCB 2023. It is planned to be 3 hours of an overview of standardization and harmonizing NGS analysis strategies in GHGA. We will explore how FAIR principles enable the standardization and harmonization of nf-core-based NGS analysis workflows within GHGA. We will  demonstrate the adaptability of nf-core workflows and discuss the importance of standardization of workflows. Finally, we will show how to make workflows scalable, robust, and automated using a small subset of a public dataset. 
 
 
-- *A* 9:00am  - 9:30am  : Introduction to the tutorial: What is GHGA? What are our workflow objectives? What is FAIR data
-- *B* 9:30am  - 10:00am : Reproducibility, adaptability, and portability of workflows
-- *C* 10:00am - 10:30am : Standardization of workflows using Workflow Managers
-- *D* 10:30am - 11:00am : Q&A and Break
-
-- *E* 11:00am - 11:30am : Accurate analysis and benchmarking
-- *F* 11:30am - 12:30am : Hands-on experience (with minimal test cases provided)
-- *G* 12:30am - 1:00pm  : Q&A and Finalization
+- *A* 9:00am  - 9:15am  : Introduction to the tutorial: What is GHGA? What are our workflow objectives? What is FAIR data
+- *B* 9:15am  - 9:45am  : Reproducibility, adaptability, and portability of workflows
+- *C* 9:45am  - 10:15am : Standardization of workflows using Workflow Managers
+- *D* 10:15am - 10:30am : Q&A and Break
+- *E* 10:30am - 11:00am : Accurate analysis and benchmarking
+- *F* 11:00am - 12:00am : Hands-on experience (with minimal test cases provided)
 
 
 ### Learning Objectives for Tutorial
@@ -35,19 +33,19 @@ We will walk through the following steps:
 ### Requirements
 
 - Bash
-- [Java11]([url](https://www.oracle.com/java/technologies/downloads/)) (or later, up to 18)
-- [Nextflow]([url](https://www.nextflow.io/docs/latest/getstarted.html#installation))
-- [nf-core]([url](https://nf-co.re/))
-- [GitHub id]([url](https://github.com/))
-- [Docker]([url](https://www.oracle.com/java/technologies/downloads/))
+- [Java11](https://www.oracle.com/java/technologies/downloads/) (or later, up to 18)
+- [Nextflow](https://www.nextflow.io/docs/latest/getstarted.html#installation)
+- [nf-core](https://nf-co.re/)
+- [GitHub id](https://github.com/)
+- [Docker](https://www.oracle.com/java/technologies/downloads/)
+- Raw files can be downloaded [here](https://drive.google.com/drive/folders/1OXGIx9RHioH1QB65SK75m_liP_fygxYH?usp=drive_link)
 
-# **An example benchmark analysis using NCBench and nf-core/sarek**
-
+# **Construction of a simple alignment and variant calling pipeline using nf-core tools*
 
 1. What is **GitHub**, how we can use it?
 
-- Open your first repository and fork https://github.com/ghga-de/gcb_workshop
-
+- fork https://github.com/ghga-de/gcb_workshop
+- fork https://github.com/nf-core/testpipeline
   
 2.  How to build and use **Docker** containers:
 
@@ -116,13 +114,199 @@ nextflow info
 
 **nf-core** is a community effort to optimize and collect a set of nextflow pipelines. Currently, they have **86** pipelines!
 
-- Let's have a look at their famous [sarek pipeline](https://nf-co.re/sarek/3.2.3)
-  
+- let's explore **nf-core** tool:
+
+```
+nf-core --help
+```
+
+- Listing available pipelines:
+
+```
+nf-core list
+```
+
+- Listing available modules through nf-core:
+
+```
+nf-core module list remote
+```
+
+4.  Using nf-core modules to build a simple pipeline
+
+- Let's use **nf-core/testpipeline** as a template. We can use the local fork of the pipeline. 
+
+```
+  git clone https://github.com/*userid*/testpipeline.git
+```
+
+- We will perform bwa-mem alignment, which requires indexed fasta genome, using bwa-index. Thus we need bwa-mem and bwa-index modules. Luckily, nf-core provides both modules and we can directly install them!
+
+```
+nf-core modules install bwa/mem
+nf-core modules install bwa/index
+```
+Now both modules should be located in **modules/nf-core** directory. 
+
+- In order to use those modules, we will add descriptions to the workflow. 
+
+Add two lines of code to workflows/testpipeline.nf
+
+```Nextflow
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    IMPORT NF-CORE MODULES
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+//
+// MODULE: Installed directly from nf-core/modules
+//
+include { BWA_MEM                     } from '../modules/nf-core/bwa/mem/main'
+include { BWA_INDEX                   } from '../modules/nf-core/bwa/index/main'
+```
+
+- This pipeline comes with a ready subworkflow in order to check the input files and create an input channel with them (subworkflows/input_check.nf). It automatically checks and validates the header, sample names, and sample directories. This module is implemented for both pair-end and single-end fastq file processing simultaneously. Since we will also use the same format, we won't change the module and make use of it directly. But, still we need to prepare our samplesheet accordingly to be able to input our files:
+
+Place fastq files (reads) into testpipeline directory and create mysamplesheet.csv file: 
+
+
+```console
+sample,fastq1,fastq2
+sample_paired_end,reads/NA12878_75M_Agilent_1.merged.fastq.gz,reads/NA12878_75M_Agilent_2.merged.fastq.gz
+sample_single_end,reads/NA12878_75M_Agilent_1.merged.fastq.gz,
+```
+
+- In order to perform alignment, we need a fasta file to be indexed. testpipeline includes igenome.config template ready to use. Therefore, we can directly use one of the provided fasta files readily.
+
+Note: [IGenomes](https://emea.support.illumina.com/sequencing/sequencing_software/igenome.html) is a source providing collections of references and annotations supported by AWS.
+
+igenome.config includes parameters for the available sources for the pipeline. Yet, to be able to use them, we need to create a channel for them. Let's create a genome channel for the usage of BWA_INDEX module. 
+Below, a channel was already created for input samplesheet.csv file. 
+
+```Nextflow
+// Check mandatory parameters
+if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
+
+ch_genome_fasta = Channel.fromPath(params.fasta).map { it -> [[id:it[0].simpleName], it] }.collect()
+```
+
+- Now, we would only need to add our first module! Checking out BWA_INDEX, the only input file is fasta file to be able to create bwa index directory.
+
+The output index directory will be saved into ch_index channel for further usage. 
+
+```Nextflow
+    //
+    // MODULE: BWA_INDEX
+    //
+    BWA_INDEX(
+        ch_genome_fasta
+    )
+    ch_index = BWA_INDEX.out.index
+    ch_versions = ch_versions.mix(BWA_INDEX.out.versions)
+```
+
+- Next task will be adding BWA_MEM alignment module:
+BWA_MEM module requires fastq reads which were already prepared through INPUT_CHECK.
+We prepared ch_index channel in the previous step.
+"true" statement is a value in order to activate samtools sort for BAM file.
+
+```Nextflow
+    //
+    // SUBWORKFLOW: Read in samplesheet, validate, and stage input files
+    //
+    INPUT_CHECK (
+        ch_input
+    )
+    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+
+    //
+    // MODULE: BWA_MEM
+    //
+    BWA_MEM(
+        INPUT_CHECK.out.reads,
+        ch_index,
+        "true"
+    )
+    ch_bam = BWA_MEM.out.bam
+    ch_versions = ch_versions.mix(BWA_MEM.out.versions)
+```
+
+5.  Our simple pipeline, providing parallel alignments for both paired-end and single-end fastq files is ready! Now, we need to create a config file to describe the parameters needed for the run.
+
+The config file needs to include minimal information about the run. 
+
+Open a text file and create this file and name to mytest.config
+
+
+``` Nextflow
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Nextflow config file for running minimal tests
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Defines input files and everything required to run a fast and simple pipeline test.
+
+    Use as follows:
+        nextflow run nf-core/testpipeline -profile mytest,<docker/singularity> --outdir <OUTDIR>
+
+----------------------------------------------------------------------------------------
+*/
+
+params {
+    config_profile_name        = 'Test profile'
+    config_profile_description = 'Minimal test dataset to check pipeline function'
+
+    // Limit resources so that this can run on GitHub Actions
+    max_cpus   = 2
+    max_memory = '6.GB'
+    max_time   = '6.h'
+
+    // Input data
+    // TODO nf-core: Specify the paths to your test data on nf-core/test-datasets
+    // TODO nf-core: Give any required params for the test so that command line flags are not needed
+    input  = 'assets/mysamplesheet.csv' 
+
+    // Genome references
+    genome = 'R64-1-1'
+}
+```
+
+Then, we should add the path of our config into nextflow.config file to be able to use directly. 
+
+``` Nextflow
+profiles{
+    mytest    { includeConfig 'conf/mytest.config'    }
+}
+```
+
+6.  Our first full-functioning pipeline is ready! and we can directly run it!
+
+```
+nf-core run main.nf -profile mytest,docker --outdir results --input mysamplesheet.csv
+```
+
+7. Analyzing the results:
+
+
+
+
+**NOTE:** 
+
+In case of any installation problems, a preconfigured Nextflow development environment is available using Gitpot: 
+
+To run Gitpod:
+
+- Click the following URL: https://gitpod.io/#https://github.com/nextflow-io/training
+  -- This is nextflows GitHub repository URL, prefixed with https://gitpod.io/#
+- Log in to your GitHub account (and allow authorization).
+- Once you have signed in, Gitpod should load (skip prebuild if asked).
+
 
 ### Sources
 
 Documentation and reference material for nextflow:
 - Nextflow homepage: https://www.nextflow.io/
+- Nextflow training material: https://training.nextflow.io
 - Pipeline examples: https://www.nextflow.io/example1.html
 - Main documentation: https://www.nextflow.io/docs/latest/index.html
 - Common implementation patterns for developers: http://nextflow-io.github.io/patterns/index.html
