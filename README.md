@@ -1,42 +1,17 @@
 
 ## **Standardizing and harmonizing NGS analysis workflows**
 
-This tutorial will explore how FAIR principles enable the standardization and harmonization of nf-core-based NGS analysis workflows within GHGA. We will  demonstrate the adaptability of nf-core workflows and discuss the importance of standardization of workflows. Finally, we will show how to make workflows scalable, robust, and automated for continuous benchmarks with hands-on exercises using a subset of a public dataset with various configurations like local and cloud settings.
+This workshop is a part of GCB 2023. It is planned to be 3 hours of an overview of standardization and harmonizing NGS analysis strategies in GHGA. We will explore how FAIR principles enable the standardization and harmonization of nf-core-based NGS analysis workflows within GHGA. We will  demonstrate the adaptability of nf-core workflows and discuss the importance of standardization of workflows. Finally, we will show how to make workflows scalable, robust, and automated for continuous benchmarks with hands-on exercises using a subset of a public dataset with various configurations like local and cloud settings.
 
 
-A
-9:00am - 9:30am
-30 min
-Introduction to the tutorial: What is GHGA? What are our workflow objectives? What is FAIR data
-B
-9:30am - 10:00am
-30 min
-Adaptability of nf-core based workflows
-C
-10:00am - 10:30am
-30 min
-Standardization of workflows and efficient use of computational infrastructure
-D
-10:30am - 10:45am
-15 min
-Q&A
+- *A* 9:00am  - 9:30am  : Introduction to the tutorial: What is GHGA? What are our workflow objectives? What is FAIR data
+- *B* 9:30am  - 10:00am : Reproducibility, adaptability, and portability of workflows
+- *C* 10:00am - 10:30am : Standardization of workflows using Workflow Managers
+- *D* 10:30am - 11:00am : Q&A and Break
 
-
-10:45am - 11:00am
-15 min
-Break
-E
-11:00am - 11:30am
-30 min
-How to make NGS workflows scalable, robust and automatic for continuous benchmarks
-F
-11:30am - 12:30am
-1h
-Hands-on experience (with minimal test cases provided)
-G
-12:30am - 1:00pm
-30min
-Q&A
+- *E* 11:00am - 11:30am : Accurate analysis and benchmarking
+- *F* 11:30am - 12:30am : Hands-on experience (with minimal test cases provided)
+- *G* 12:30am - 1:00pm  : Q&A and Finalization
 
 
 ### Learning Objectives for Tutorial
@@ -65,14 +40,9 @@ We will walk through the following steps:
 - [nf-core]([url](https://nf-co.re/))
 - [GitHub id]([url](https://github.com/))
 - [Docker]([url](https://www.oracle.com/java/technologies/downloads/))
-- [Zenado id]([url](https://zenodo.org/)) 
 
 # **An example benchmark analysis using NCBench and nf-core/sarek**
 
-- Benchmark plan:
--   Data: link to zenado
--   Comparison of aligners
--   Comparison of variant callers
 
 1. What is **GitHub**, how we can use it?
 
