@@ -317,7 +317,7 @@ We will need the alignment bam file and reference fasta file to run bcftools mpi
     END_VERSIONS
 ```
 
- We can add either our docker container or search for the proper bcftool version on biocontainers registry. 
+ We can add either our docker container or search for the proper bcftool version on[ biocontainers registry](https://quay.io/repository/biocontainers/bcftools?tab=tags). 
 
 ```Nextflow
     conda "bioconda::bcftools=1.17"
