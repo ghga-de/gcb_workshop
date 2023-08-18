@@ -67,30 +67,31 @@ docker pull ubuntu:16.04
 docker run -ti ubuntu:16.04
 ```
 
-- Lets build an image to download and install *samtools*
+- Lets build an image to download and install *bcftools*
 
 ```
 # Update the package inside the container
 apt-get update
 # Install the tools we need to download and compile Samtools
-apt-get install wget build-essential liblzma-dev libbz2-dev libncurses5-dev zlib1g-dev
+apt-get install wget build-essential liblzma-dev libbz2-dev libncurses5-dev zlib1g-dev libcurl4-openssl-dev
 # Download Samtools
-wget https://github.com/samtools/samtools/releases/download/1.18/samtools-1.18.tar.bz2
+wget https://github.com/samtools/bcftools/releases/download/1.17/bcftools-1.17.tar.bz2
+
 # Unpack the archive
-tar jxf samtools-1.18.tar.bz2
-cd samtools-1.18
+tar jxf bcftools-1.17.tar.bz2
+cd bcftools-1.17
 # Compile the code
 make
 # Install the resulting binaries
 make install
 #check if everything is properly installed
-samtools --version
+bcftools --version
 #If complete exit docker
 exit
 ```
 
 - Save and upload the docker image.
-An example image name could be: kubran/samtools:v0
+An example image name could be: kubran/bcftools:v1.17
 
 ```
 docker commit <containerid> dockerid/imagename:version_tag
@@ -99,7 +100,7 @@ docker commit <containerid> dockerid/imagename:version_tag
 - Push the image to Dockerhub:
 
 ```
-docker push kubran/samtools:v0
+docker push dockerid/imagename:version_tag
 ```
 
 3.  Getting familiar with **Nextflow** and **nf-core**
